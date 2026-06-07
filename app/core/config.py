@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     
     DATABASE_URL: str = "postgresql+psycopg://leon:123456@localhost:5432/noveltoscript"
     
-    QWEN_API_KEY: str = "sk-3f4bc4fe2cce496d9a4b393c46ed73da"
+    QWEN_API_KEY: str = "xxxx"
     QWEN_API_BASE: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     QWEN_MODEL: str = "qwen-vl-max"
     
