@@ -331,6 +331,9 @@ TTS API（如 ElevenLabs）和视频生成 API 需要标准化的情感参数。
 - [ ] 版本对比与 Diff 视图
 
 ---
+## 视频链接
+
+https://www.bilibili.com/video/BV1t7Et6gENQ/?vd_source=87f3da7c5a6a611dc4cd4f324df29ee8
 
 ## 许可证
 
