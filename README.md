@@ -91,7 +91,7 @@ cp .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 4. 启动前端
+### 4. 启动前端（文件在frontend分支里）
 
 ```bash
 cd frontend
