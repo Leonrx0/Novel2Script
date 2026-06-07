@@ -68,6 +68,7 @@ export const generateApi = {
   script: (projectId: string) => api.post(`/generate/script/${projectId}`),
   rewrite: (projectId: string, content: string, instruction: string) =>
     api.post(`/generate/rewrite/${projectId}`, { content, instruction }),
+  assistantStreamUrl: (projectId: string) => `/api/v1/generate/assistant-stream/${projectId}`,
   stream: (projectId: string, stage: string) => {
     return new EventSource(`/api/v1/generate/stream?project_id=${projectId}&stage=${stage}`)
   }

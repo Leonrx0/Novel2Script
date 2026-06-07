@@ -1,4 +1,4 @@
-import { Layout as AntLayout, Button, Menu, Tooltip, Typography } from 'antd'
+import { Layout as AntLayout, Button, Menu, Tooltip } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import type { MenuProps } from 'antd'
 import {
@@ -12,8 +12,7 @@ import {
 } from '@ant-design/icons'
 import { ReactNode, useMemo, useState } from 'react'
 
-const { Header, Sider, Content } = AntLayout
-const { Title } = Typography
+const { Sider, Content } = AntLayout
 
 interface LayoutProps {
   children: ReactNode
@@ -60,75 +59,101 @@ export default function Layout({ children }: LayoutProps) {
       ]
     : []
 
+  const primaryWidth = collapsed ? 64 : 160
+  const projectWidth = currentId ? (collapsed ? 64 : 180) : 0
+  const sidebarWidth = primaryWidth + projectWidth
+
   return (
     <AntLayout style={{ minHeight: '100vh' }}>
-      <AntLayout>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        trigger={null}
+        width={160}
+        collapsedWidth={64}
+        theme="dark"
+        style={{
+          overflow: 'auto',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          height: '100vh',
+          zIndex: 100,
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: collapsed ? 'center' : 'flex-end', padding: '12px 12px 8px', backgroundColor: '#fff' }}>
+          <Tooltip title={collapsed ? '展开侧边栏' : '收起侧边栏'} placement="right">
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed((v) => !v)}
+              style={{ color: '#000' }}
+            />
+          </Tooltip>
+        </div>
+        <Menu
+          mode="inline"
+          selectedKeys={primarySelected ? [primarySelected] : []}
+          style={{ height: '100%', borderRight: 0 }}
+          items={primaryItems}
+          onClick={({ key }) => navigate(key)}
+        />
+      </Sider>
+
+      {currentId && (
         <Sider
+          width={180}
+          collapsedWidth={64}
           collapsible
           collapsed={collapsed}
           trigger={null}
-          width={160}
-          collapsedWidth={64}
-          theme="dark"
-          style={{ overflow: 'auto', position: 'relative' }}
+          theme="light"
+          style={{
+            borderRight: '1px solid #f0f0f0',
+            overflow: 'auto',
+            position: 'fixed',
+            left: primaryWidth,
+            top: 0,
+            bottom: 0,
+            height: '100vh',
+            zIndex: 99,
+          }}
         >
-          <div style={{ display: 'flex', justifyContent: collapsed ? 'center' : 'flex-end', padding: '12px 12px 8px',backgroundColor:'#fff' }}>
-            <Tooltip title={collapsed ? '展开侧边栏' : '收起侧边栏'} placement="right">
-              <Button
-                type="text"
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed((v) => !v)}
-                style={{ color: '#000' }}
-              />
-            </Tooltip>
-          </div>
+          {!collapsed && (
+            <div style={{ padding: '16px 0 8px 16px', fontSize: 12, color: '#999', fontWeight: 600 }}>
+              项目工具
+            </div>
+          )}
           <Menu
             mode="inline"
-            selectedKeys={primarySelected ? [primarySelected] : []}
+            selectedKeys={projectSelected ? [projectSelected] : []}
             style={{ height: '100%', borderRight: 0 }}
-            items={primaryItems}
-            onClick={({ key }) => navigate(key)}
+            items={projectItems}
+            onClick={({ key }) => navigate(`/${key}/${currentId}`)}
           />
         </Sider>
+      )}
 
-        {currentId && (
-          <Sider
-            width={180}
-            collapsedWidth={64}
-            collapsible
-            collapsed={collapsed}
-            trigger={null}
-            theme="light"
-            style={{ borderRight: '1px solid #f0f0f0', overflow: 'auto' }}
-          >
-            {!collapsed && (
-              <div style={{ padding: '16px 0 8px 16px', fontSize: 12, color: '#999', fontWeight: 600 }}>
-                项目工具
-              </div>
-            )}
-            <Menu
-              mode="inline"
-              selectedKeys={projectSelected ? [projectSelected] : []}
-              style={{ height: '100%', borderRight: 0 }}
-              items={projectItems}
-              onClick={({ key }) => navigate(`/${key}/${currentId}`)}
-            />
-          </Sider>
-        )}
-
-        <AntLayout style={{ padding: '24px' }}>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: '#fff',
-              borderRadius: 8,
-            }}
-          >
-            {children}
-          </Content>
-        </AntLayout>
+      <AntLayout
+        style={{
+          padding: '24px',
+          marginLeft: sidebarWidth,
+          minHeight: '100vh',
+          transition: 'margin-left 0.2s ease',
+        }}
+      >
+        <Content
+          style={{
+            padding: 24,
+            margin: 0,
+            minHeight: 280,
+            background: '#fff',
+            borderRadius: 8,
+          }}
+        >
+          {children}
+        </Content>
       </AntLayout>
     </AntLayout>
   )
